@@ -12,45 +12,62 @@
 ### High Risk Issues
 
 
-### [H&#x2011;01] some title
+| |Issue|Instances|
+|-|:-|:-:|### [H&#x2011;01] some title
 deleted some issues
 this is the issue
+
+*GitHub* : https://somepretentlinesofcode.com
+
+*There are 1 instances of this issue:*### [H&#x2011;01] some title
+some issue for some title
+this is the issue
+
 *GitHub* : https://somepretentlinesofcode.com
 ### [H&#x2011;01] some title
 some issue for some title
 this is the issue
-*GitHub* : https://somepretentlinesofcode.com
-### [H&#x2011;01] some title
-some issue for some title
-this is the issue
+
 *GitHub* : https://somepretentlinesofcode.com
 ### [H&#x2011;01] some new title to test editing
 some issue for some title
 this is the issue
+
 *GitHub* : https://somepretentlinesofcode.com### Medium Risk Issues
 
 
+| |Issue|Instances|
+|-|:-|:-:|### [M&#x2011;01] some other title
+some issue for some title
+this is the issue
+
+*GitHub* : https://somepretentlinesofcode.com
+this is the issue
+
+*GitHub* : https://somepretentlinesofcode.com
+this is the issue
+
+*GitHub* : https://somepretentlinesofcode.com
+
+*There are 3 instances of this issue:*### [M&#x2011;01] some other title
+some issue for some title
+this is the issue
+
+*GitHub* : https://somepretentlinesofcode.com
+this is the issue
+
+*GitHub* : https://somepretentlinesofcode.com
+this is the issue
+
+*GitHub* : https://somepretentlinesofcode.com
 ### [M&#x2011;01] some other title
 some issue for some title
 this is the issue
+
 *GitHub* : https://somepretentlinesofcode.com
 this is the issue
+
 *GitHub* : https://somepretentlinesofcode.com
 this is the issue
-*GitHub* : https://somepretentlinesofcode.com
-### [M&#x2011;01] some other title
-some issue for some title
-this is the issue
-*GitHub* : https://somepretentlinesofcode.com
-this is the issue
-*GitHub* : https://somepretentlinesofcode.com
-this is the issue
-*GitHub* : https://somepretentlinesofcode.com
-### [M&#x2011;01] some other title
-some issue for some title
-this is the issue
-*GitHub* : https://somepretentlinesofcode.com
-this is the issue
-*GitHub* : https://somepretentlinesofcode.com
-this is the issue
+
 *GitHub* : https://somepretentlinesofcode.com
