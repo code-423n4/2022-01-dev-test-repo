@@ -20,6 +20,7 @@
 deleted some issues
 
 *There are 1 instance(s) of this issue:*
+
 this is the issue
 
 *GitHub* : https://somepretentlinesofcode.com
@@ -27,6 +28,7 @@ this is the issue
 some issue for some title
 
 *There are 1 instance(s) of this issue:*
+
 this is the issue
 
 *GitHub* : https://somepretentlinesofcode.com
@@ -34,6 +36,7 @@ this is the issue
 some issue for some title
 
 *There are 1 instance(s) of this issue:*
+
 this is the issue
 
 *GitHub* : https://somepretentlinesofcode.com
@@ -41,6 +44,7 @@ this is the issue
 some issue for some title
 
 *There are 1 instance(s) of this issue:*
+
 this is the issue
 
 *GitHub* : https://somepretentlinesofcode.com### Medium Risk Issues
@@ -50,12 +54,15 @@ this is the issue
 some issue for some title
 
 *There are 3 instance(s) of this issue:*
+
 this is the issue
 
 *GitHub* : https://somepretentlinesofcode.com
+
 this is the issue
 
 *GitHub* : https://somepretentlinesofcode.com
+
 this is the issue
 
 *GitHub* : https://somepretentlinesofcode.com
@@ -63,12 +70,15 @@ this is the issue
 some issue for some title
 
 *There are 3 instance(s) of this issue:*
+
 this is the issue
 
 *GitHub* : https://somepretentlinesofcode.com
+
 this is the issue
 
 *GitHub* : https://somepretentlinesofcode.com
+
 this is the issue
 
 *GitHub* : https://somepretentlinesofcode.com
@@ -76,12 +86,15 @@ this is the issue
 some issue for some title
 
 *There are 3 instance(s) of this issue:*
+
 this is the issue
 
 *GitHub* : https://somepretentlinesofcode.com
+
 this is the issue
 
 *GitHub* : https://somepretentlinesofcode.com
+
 this is the issue
 
 *GitHub* : https://somepretentlinesofcode.com
