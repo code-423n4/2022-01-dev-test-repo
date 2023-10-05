@@ -2,13 +2,13 @@
   This is the top-ranked automated findings report, from nighthawk_test_bot bot. All findings in this report will be considered known issues for the purposes of your C4 audit.
 
   ## Summary 
-| [H&#x2011;01] | deleted some issues | 1|
-| [H&#x2011;01] | some issue for some title | 1|
-| [H&#x2011;01] | some issue for some title | 1|
-| [H&#x2011;01] | some issue for some title | 1|
-| [M&#x2011;01] | some issue for some title | 3|
-| [M&#x2011;01] | some issue for some title | 3|
-| [M&#x2011;01] | some issue for some title | 3|
+| [[H&#x2011;01](#1)] | deleted some issues | 1|
+| [[H&#x2011;01](#1)] | some issue for some title | 1|
+| [[H&#x2011;01](#1)] | some issue for some title | 1|
+| [[H&#x2011;01](#1)] | some issue for some title | 1|
+| [[M&#x2011;01](#1)] | some issue for some title | 3|
+| [[M&#x2011;01](#1)] | some issue for some title | 3|
+| [[M&#x2011;01](#1)] | some issue for some title | 3|
 ### High Risk Issues
 
 
