@@ -2,7 +2,7 @@
   This is the top-ranked automated findings report, from Hound bot. All findings in this report will be considered known issues for the purposes of your C4 audit.
 
   ## Summary 
-| |Issue|Instances|
+| |Issue|Instances| Gas Savings
 |-|:-|:-:|
 | [[M&#x2011;01](#01)] | Not all `IERC20` implementations revert when there's a failure while transfering. The function signature has a boolean return value and they indicate errors that way instead. By not checking the return value, operations that should have marked as failed, may potentially go through without actually making a payment. | 6|
 | [[M&#x2011;02](#02)] | The Uniswap v3 protocol does not provide support for rebasing or fee-on-transfer tokens. Consequently, attempting to utilize such tokens with Uniswap v3 may lead to failed transfers after a swap due to insufficient tokens or result in the contract having a remaining balance following the transfer. | 1|
@@ -25,7 +25,7 @@ As a result, there is a possibility that the call wasn't successful, while the t
 | [[M&#x2011;13](#13)] | The inclusion of a transaction expiration check provides a safeguard for users against swapping tokens at a price that is lower than the current market price, but there isn't a check for a deadline, so users can be sandwiched by a MEV bot.
 
 This can happen when the transaction remains in the mempool for a period of time because the gas cost paid by the transaction is lower than the current gas price. | 1|
-| |Issue|Instances|
+| |Issue|Instances| Gas Savings
 |-|:-|:-:|
 | [[L&#x2011;01](#01)] | Not all `IERC20` implementations (e.g. USDT, KNC) `revert` when there's a failure in `approve`. The function signature has a boolean return value and they indicate errors that way instead.
 
@@ -284,7 +284,7 @@ for(uint256 i; i < length;) {
 It is possible to activate the IR-based code generator through the command line by using the flag `--via-ir` or by including the option `{"viaIR": true}`.
 
 Keep in mind that compiling with this option may take longer. However, you can simply test it before deploying your code. If you find that it provides better performance, you can add the `--via-ir` flag to your deploy command. | 1|
-| |Issue|Instances|
+| |Issue|Instances| Gas Savings
 |-|:-|:-:|
 | [[N&#x2011;01](#01)] | All `external`/`public` functions should extend an `interface`. This is useful to make sure that the whole API is extracted. | 373|
 | [[N&#x2011;02](#02)] | Custom errors are available from solidity version 0.8.4. Custom errors are more easily processed in try-catch blocks, and are easier to re-use and maintain. | 246|
@@ -481,7 +481,7 @@ Even if Natspec for internal and private function is not parsed (but this may ch
 Some tools that are currently available to perform these tests on smart contracts are [SMTChecker](https://docs.soliditylang.org/en/latest/smtchecker.html) and [Certora Prover](https://www.certora.com/). | 1|
 | [[N&#x2011;130](#130)] | Low-level languages like assembly should require extensive documentation and comments to clarify the purpose of each instruction. | 1|
 | [[N&#x2011;131](#131)] | The `if`/`else` statement can be written in a shorthand way using the ternary operator, as it increases readability and reduces the number of lines of code. | 3|
-| |Issue|Instances|
+| |Issue|Instances| Gas Savings
 |-|:-|:-:|
 | [[D&#x2011;01](#01)] | The rule is valid for some ERC20, but these instances contain either non-ERC20 or ERC20 that do not have this issue. | 24|
 | [[D&#x2011;02](#02)] | The rule is valid for some ERC20, but these instances contain either non-ERC20 or ERC20 that do not have this issue. | 29|
