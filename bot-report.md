@@ -4,96 +4,96 @@
   ## Summary 
 | |Issue|Instances| Gas Savings
 |-|:-|:-:|
-| [[M&#x2011;01](#01)] | Not all `IERC20` implementations revert when there's a failure while transfering. The function signature has a boolean return value and they indicate errors that way instead. By not checking the return value, operations that should have marked as failed, may potentially go through without actually making a payment. | 6|  null
-| [[M&#x2011;02](#02)] | The Uniswap v3 protocol does not provide support for rebasing or fee-on-transfer tokens. Consequently, attempting to utilize such tokens with Uniswap v3 may lead to failed transfers after a swap due to insufficient tokens or result in the contract having a remaining balance following the transfer. | 1|  null
-| [[M&#x2011;03](#03)] | The following functions lack slippage protection and they are exposed to front-running, which will lead to the user losing their funds as they get sandwiched. | 9|  null
-| [[M&#x2011;04](#04)] | There aren't any checks to avoid an underflow which can happen inside an `unchecked` block, so the following subtractions may underflow silently. | 2|  null
+| [[M&#x2011;01](#01)] | Not all `IERC20` implementations revert when there's a failure while transfering. The function signature has a boolean return value and they indicate errors that way instead. By not checking the return value, operations that should have marked as failed, may potentially go through without actually making a payment. | 6|  0
+| [[M&#x2011;02](#02)] | The Uniswap v3 protocol does not provide support for rebasing or fee-on-transfer tokens. Consequently, attempting to utilize such tokens with Uniswap v3 may lead to failed transfers after a swap due to insufficient tokens or result in the contract having a remaining balance following the transfer. | 1|  0
+| [[M&#x2011;03](#03)] | The following functions lack slippage protection and they are exposed to front-running, which will lead to the user losing their funds as they get sandwiched. | 9|  0
+| [[M&#x2011;04](#04)] | There aren't any checks to avoid an underflow which can happen inside an `unchecked` block, so the following subtractions may underflow silently. | 2|  0
 | [[M&#x2011;05](#05)] | Some tokens take a transfer fee (e.g. `STA`, `PAXG`), some do not currently charge a fee but may do so in the future (e.g. `USDT`, `USDC`).
 
-Should a fee-on-transfer token be added as an asset and deposited, it could be abused, as the accounting is wrong. In the current implementation the following function calls do not work well with fee-on-transfer tokens as the amount variable is the pre-fee amount, including the fee, whereas the final balance do not include the fee anymore. | 7|  null
-| [[M&#x2011;06](#06)] | Not all `ERC20` implementations are totally compliant, and some (e.g `LEND`) may fail while transfering a zero amount. | 11|  null
+Should a fee-on-transfer token be added as an asset and deposited, it could be abused, as the accounting is wrong. In the current implementation the following function calls do not work well with fee-on-transfer tokens as the amount variable is the pre-fee amount, including the fee, whereas the final balance do not include the fee anymore. | 7|  0
+| [[M&#x2011;06](#06)] | Not all `ERC20` implementations are totally compliant, and some (e.g `LEND`) may fail while transfering a zero amount. | 11|  0
 | [[M&#x2011;07](#07)] | Some `IERC20` tokens (e.g. BNB, OMG, USDT) do not implement the standard properly, but they are still accepted by most code that accepts `ERC20` tokens.
 
-For example, USDT `transfer` functions on L1 do not return booleans: when casted to `IERC20`, their function signatures do not match, and therefore the calls made will revert. | 6|  null
+For example, USDT `transfer` functions on L1 do not return booleans: when casted to `IERC20`, their function signatures do not match, and therefore the calls made will revert. | 6|  0
 | [[M&#x2011;08](#08)] | The `call/delegatecall` function returns a boolean value indicating whether the call was successful. However, it is important to note that this return value is not being checked in the current implementation.
 
-As a result, there is a possibility that the call wasn't successful, while the transaction continues without reverting. | 15|  null
-| [[M&#x2011;09](#09)] | These functions lack a refund mechanism for excess Ether sent by the caller, resulting in locked funds within the contract. To rectify this, the function should be modified to implement a refund for any surplus amount. | 21|  null
-| [[M&#x2011;10](#10)] | There are priviliged roles that are a single point of failure, who can use critical functions, posing a centralization issue. | 87|  null
-| [[M&#x2011;11](#11)] | If the recipient is not a EOA, `safeTransferFrom` ensures that the contract is able to safely receive the token. In the worst-case scenario, it may result in tokens frozen permanently, as the following code uses `transferFrom`, which [doesn't check](https://github.com/ethereum/EIPs/blob/78e2c297611f5e92b6a5112819ab71f74041ff25/EIPS/eip-721.md?plain=1#L103-L113) if the recipient can handle the NFT. | 1|  null
-| [[M&#x2011;12](#12)] | The `msg.value` stays the same for each iteration of these loops, so the accounting may be wrong, and in some cases the function will always revert if it's meant to redistribute the value to multiple addresses. | 1|  null
+As a result, there is a possibility that the call wasn't successful, while the transaction continues without reverting. | 15|  0
+| [[M&#x2011;09](#09)] | These functions lack a refund mechanism for excess Ether sent by the caller, resulting in locked funds within the contract. To rectify this, the function should be modified to implement a refund for any surplus amount. | 21|  0
+| [[M&#x2011;10](#10)] | There are priviliged roles that are a single point of failure, who can use critical functions, posing a centralization issue. | 87|  0
+| [[M&#x2011;11](#11)] | If the recipient is not a EOA, `safeTransferFrom` ensures that the contract is able to safely receive the token. In the worst-case scenario, it may result in tokens frozen permanently, as the following code uses `transferFrom`, which [doesn't check](https://github.com/ethereum/EIPs/blob/78e2c297611f5e92b6a5112819ab71f74041ff25/EIPS/eip-721.md?plain=1#L103-L113) if the recipient can handle the NFT. | 1|  0
+| [[M&#x2011;12](#12)] | The `msg.value` stays the same for each iteration of these loops, so the accounting may be wrong, and in some cases the function will always revert if it's meant to redistribute the value to multiple addresses. | 1|  0
 | [[M&#x2011;13](#13)] | The inclusion of a transaction expiration check provides a safeguard for users against swapping tokens at a price that is lower than the current market price, but there isn't a check for a deadline, so users can be sandwiched by a MEV bot.
 
-This can happen when the transaction remains in the mempool for a period of time because the gas cost paid by the transaction is lower than the current gas price. | 1|  null
+This can happen when the transaction remains in the mempool for a period of time because the gas cost paid by the transaction is lower than the current gas price. | 1|  0
 | |Issue|Instances| Gas Savings
 |-|:-|:-:|
 | [[L&#x2011;01](#01)] | Not all `IERC20` implementations (e.g. USDT, KNC) `revert` when there's a failure in `approve`. The function signature has a boolean return value and they indicate errors that way instead.
 
-By not checking the return value, operations that should have marked as failed, may potentially go through without actually approving anything. | 26|  null
-| [[L&#x2011;02](#02)] | The condition may be wrong in these cases, as when `block.timestamp` is equal to the compared `>` or `<` variable these blocks will not be executed. | 6|  null
-| [[L&#x2011;03](#03)] | Some functions use a deprecated version of Chainlink functions, consider following the [documentation](https://docs.chain.link/data-feeds/api-reference) to use the supported alternatives. | 5|  null
-| [[L&#x2011;04](#04)] | The following functions don't apply the CEI pattern. It's possible to reenter after the transfer if the token has some kind of callback functionality (e.g. ERC777/ERC1155). | 2|  null
-| [[L&#x2011;05](#05)] | There are no limits to the fees imposed by the smart contract, which can go even over 100%. Considering implementing a cap, preferably under 100%. | 2|  null
-| [[L&#x2011;06](#06)] | There are some missing checks in these functions, and this could lead to unexpected scenarios. Consider always adding a sanity check for state variables. | 16|  null
-| [[L&#x2011;07](#07)] | There are some missing checks in these functions, and this could lead to unexpected scenarios. Consider always adding a sanity check for state variables. | 18|  null
-| [[L&#x2011;08](#08)] | The following functions can be called by any user, who may also send some funds by mistake. In that case, those funds will be lost. | 42|  null
-| [[L&#x2011;09](#09)] | Even if the function follows the best practice of check-effects-interaction, not using a reentrancy guard when there may be transfer hooks will open the users of this protocol up to read-only reentrancies with no way to protect against it, except by block-listing the whole protocol. | 37|  null
-| [[L&#x2011;10](#10)] | Each of the following contracts implements or inherits the `renounceOwnership` function. This can represent a certain risk if the ownership is renounced for any other reason than by design. Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner. | 34|  null
+By not checking the return value, operations that should have marked as failed, may potentially go through without actually approving anything. | 26|  0
+| [[L&#x2011;02](#02)] | The condition may be wrong in these cases, as when `block.timestamp` is equal to the compared `>` or `<` variable these blocks will not be executed. | 6|  0
+| [[L&#x2011;03](#03)] | Some functions use a deprecated version of Chainlink functions, consider following the [documentation](https://docs.chain.link/data-feeds/api-reference) to use the supported alternatives. | 5|  0
+| [[L&#x2011;04](#04)] | The following functions don't apply the CEI pattern. It's possible to reenter after the transfer if the token has some kind of callback functionality (e.g. ERC777/ERC1155). | 2|  0
+| [[L&#x2011;05](#05)] | There are no limits to the fees imposed by the smart contract, which can go even over 100%. Considering implementing a cap, preferably under 100%. | 2|  0
+| [[L&#x2011;06](#06)] | There are some missing checks in these functions, and this could lead to unexpected scenarios. Consider always adding a sanity check for state variables. | 16|  0
+| [[L&#x2011;07](#07)] | There are some missing checks in these functions, and this could lead to unexpected scenarios. Consider always adding a sanity check for state variables. | 18|  0
+| [[L&#x2011;08](#08)] | The following functions can be called by any user, who may also send some funds by mistake. In that case, those funds will be lost. | 42|  0
+| [[L&#x2011;09](#09)] | Even if the function follows the best practice of check-effects-interaction, not using a reentrancy guard when there may be transfer hooks will open the users of this protocol up to read-only reentrancies with no way to protect against it, except by block-listing the whole protocol. | 37|  0
+| [[L&#x2011;10](#10)] | Each of the following contracts implements or inherits the `renounceOwnership` function. This can represent a certain risk if the ownership is renounced for any other reason than by design. Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner. | 34|  0
 | [[L&#x2011;11](#11)] | Low-level calls return success if there is no code present at the specified address, and this could lead to unexpected scenarios.
 
-Ensure that the code is initialized by checking `<address>.code.length > 0`. | 20|  null
-| [[L&#x2011;12](#12)] | Consider limiting the number of iterations in loops that make external calls, as just a single one of them failing will result in a revert. | 24|  null
+Ensure that the code is initialized by checking `<address>.code.length > 0`. | 20|  0
+| [[L&#x2011;12](#12)] | Consider limiting the number of iterations in loops that make external calls, as just a single one of them failing will result in a revert. | 24|  0
 | [[L&#x2011;13](#13)] | The `decimals` function is not part of the `ERC20` standard, and they may revert with some tokens if the don't also extend the `IERC20Metadata` interface.
 
-Even if these addresses are safe and known, consider refactoring the typing to `IERC20Metadata` nonetheless to represent this fact. | 5|  null
-| [[L&#x2011;14](#14)] | EIP-20 [states](https://eips.ethereum.org/EIPS/eip-20#decimals) that the `decimals` function must return an `uint8`. | 1|  null
-| [[L&#x2011;15](#15)] | Some `IERC20` implementations (e.g `UNI`, `COMP`) may fail if the valued `transferred` is larger than `uint96`. [Source](https://github.com/d-xo/weird-erc20/blob/main/src/Uint96.sol). | 6|  null
-| [[L&#x2011;16](#16)] | Not all `IERC20` implementations are totally compliant, and some (e.g `UNI`, `COMP`) may fail if the valued passed to `approve` is larger than `uint96`. If the approval amount is `type(uint256).max`, which may cause issues with systems that expect the value passed to approve to be reflected in the allowances mapping. | 22|  null
+Even if these addresses are safe and known, consider refactoring the typing to `IERC20Metadata` nonetheless to represent this fact. | 5|  0
+| [[L&#x2011;14](#14)] | EIP-20 [states](https://eips.ethereum.org/EIPS/eip-20#decimals) that the `decimals` function must return an `uint8`. | 1|  0
+| [[L&#x2011;15](#15)] | Some `IERC20` implementations (e.g `UNI`, `COMP`) may fail if the valued `transferred` is larger than `uint96`. [Source](https://github.com/d-xo/weird-erc20/blob/main/src/Uint96.sol). | 6|  0
+| [[L&#x2011;16](#16)] | Not all `IERC20` implementations are totally compliant, and some (e.g `UNI`, `COMP`) may fail if the valued passed to `approve` is larger than `uint96`. If the approval amount is `type(uint256).max`, which may cause issues with systems that expect the value passed to approve to be reflected in the allowances mapping. | 22|  0
 | [[L&#x2011;17](#17)] | The Multichain/AnySwap [exploits](https://medium.com/zengo/without-permit-multichains-exploit-explained-8417e8c1639b) were caused by smart contracts incorrectly assuming that a failed permit call would always revert.
 
-Using `safePermit` instead of `permit` ensures that the call will always revert if the operation did not succeed. | 7|  null
-| [[L&#x2011;18](#18)] | Add a two-step process for any critical address changes. | 26|  null
+Using `safePermit` instead of `permit` ensures that the call will always revert if the operation did not succeed. | 7|  0
+| [[L&#x2011;18](#18)] | Add a two-step process for any critical address changes. | 26|  0
 | [[L&#x2011;19](#19)] | A single step ownership change is risky due to the fact that the new owner address could be wrong.
 
-Instead, consider using a contract like [Ownable2Step](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/access/Ownable2Step.sol), which provides a two-step ownership. | 24|  null
-| [[L&#x2011;20](#20)] | `abi.encodePacked` should not be used with dynamic types when passing the result to a hash function such as `keccak256`. Use `abi.encode` instead, which will pad items to 32 bytes, to [prevent any hash collisions](https://docs.soliditylang.org/en/latest/abi-spec.html#non-standard-packed-mode). | 2|  null
+Instead, consider using a contract like [Ownable2Step](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/access/Ownable2Step.sol), which provides a two-step ownership. | 24|  0
+| [[L&#x2011;20](#20)] | `abi.encodePacked` should not be used with dynamic types when passing the result to a hash function such as `keccak256`. Use `abi.encode` instead, which will pad items to 32 bytes, to [prevent any hash collisions](https://docs.soliditylang.org/en/latest/abi-spec.html#non-standard-packed-mode). | 2|  0
 | [[L&#x2011;21](#21)] | Solidity doesn't support fractions, so divisions by large numbers could result in the quotient being zero.
 
-To avoid this, it's recommended to require a minimum numerator amount to ensure that it is always greater than the denominator. | 85|  null
-| [[L&#x2011;22](#22)] | Some tokens like USDT check for the current approval, and they revert if it's not zero. While Tether is known to do this, it applies to other tokens as well, which are trying to protect against [this](https://docs.google.com/document/d/1YLPtQxZu1UAvO9cZ1O2RPXBbT0mooh4DYKjA_jp-RLM/edit) attack vector. | 18|  null
-| [[L&#x2011;23](#23)] | The usage of deprecated library functions should be discouraged, as `safeApprove` is also potentially [dangerous](https://github.com/OpenZeppelin/openzeppelin-contracts/issues/2219). | 1|  null
-| [[L&#x2011;24](#24)] | Users should always have the possibility of accessing their own funds, but when these functions are paused, their funds will be locked until the contracts are unpaused. | 1|  null
+To avoid this, it's recommended to require a minimum numerator amount to ensure that it is always greater than the denominator. | 85|  0
+| [[L&#x2011;22](#22)] | Some tokens like USDT check for the current approval, and they revert if it's not zero. While Tether is known to do this, it applies to other tokens as well, which are trying to protect against [this](https://docs.google.com/document/d/1YLPtQxZu1UAvO9cZ1O2RPXBbT0mooh4DYKjA_jp-RLM/edit) attack vector. | 18|  0
+| [[L&#x2011;23](#23)] | The usage of deprecated library functions should be discouraged, as `safeApprove` is also potentially [dangerous](https://github.com/OpenZeppelin/openzeppelin-contracts/issues/2219). | 1|  0
+| [[L&#x2011;24](#24)] | Users should always have the possibility of accessing their own funds, but when these functions are paused, their funds will be locked until the contracts are unpaused. | 1|  0
 | [[L&#x2011;25](#25)] | When a type is downcast to a smaller type, the higher order bits are discarded, resulting in the application of a modulo operation to the original value.
 
-If the downcasted value is large enough, this may result in an overflow that will not revert. | 40|  null
+If the downcasted value is large enough, this may result in an overflow that will not revert. | 40|  0
 | [[L&#x2011;26](#26)] | A low-level call will copy any amount of bytes to local memory. When bytes are copied from returndata to memory, the memory expansion cost is paid.
 
 This means that when using a standard solidity call, the callee can 'returnbomb' the caller, imposing an arbitrary gas cost.
 
 Because this gas is paid by the caller and in the caller's context, it can cause the caller to run out of gas and halt execution.
 
-Consider replacing all unsafe `call` with `excessivelySafeCall` from this [repository](https://github.com/nomad-xyz/ExcessivelySafeCall). | 5|  null
-| [[L&#x2011;27](#27)] | The following functions should handle the edge case where the totalSupply is zero, for example to avoid division by zero errors, as such errors may negatively impact the logic of these functions. | 1|  null
-| [[L&#x2011;28](#28)] | As these arrays cannot shrink, if the array has a maximum size, it won't be possible to change its elements once it reaches that size. Otherwise, it can grow indefinitely in size, which can increase the likelihood of out-of-gas errors. | 5|  null
+Consider replacing all unsafe `call` with `excessivelySafeCall` from this [repository](https://github.com/nomad-xyz/ExcessivelySafeCall). | 5|  0
+| [[L&#x2011;27](#27)] | The following functions should handle the edge case where the totalSupply is zero, for example to avoid division by zero errors, as such errors may negatively impact the logic of these functions. | 1|  0
+| [[L&#x2011;28](#28)] | As these arrays cannot shrink, if the array has a maximum size, it won't be possible to change its elements once it reaches that size. Otherwise, it can grow indefinitely in size, which can increase the likelihood of out-of-gas errors. | 5|  0
 | [[L&#x2011;29](#29)] | The `owner` is able to perform certain privileged activities, but it's possible to set the owner to `address(0)`. This can represent a certain risk if the ownership is renounced for any other reason than by design.
 
-Renouncing ownership will leave the contract without an `owner`, therefore limiting any functionality that needs authority. | 65|  null
+Renouncing ownership will leave the contract without an `owner`, therefore limiting any functionality that needs authority. | 65|  0
 | [[L&#x2011;30](#30)] | The `int` type in Solidity uses the [two's complement system](https://en.wikipedia.org/wiki/Two%27s_complement), so it is possible to accidentally overflow a very large `uint` to an `int`, even if they share the same number of bytes (e.g. a `uint256 number > type(uint128).max` will overflow a `int256` cast).
 
-Consider using the [SafeCast](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/math/SafeCast.sol) library to prevent any overflows. | 10|  null
-| [[L&#x2011;31](#31)] | EIP-721 [states](https://eips.ethereum.org/EIPS/eip-721) that tokenURI 'Throws if _tokenId is not a valid NFT', which the code below does not do. If the NFT has not yet been minted, `tokenURI` must revert. | 2|  null
+Consider using the [SafeCast](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/math/SafeCast.sol) library to prevent any overflows. | 10|  0
+| [[L&#x2011;31](#31)] | EIP-721 [states](https://eips.ethereum.org/EIPS/eip-721) that tokenURI 'Throws if _tokenId is not a valid NFT', which the code below does not do. If the NFT has not yet been minted, `tokenURI` must revert. | 2|  0
 | [[L&#x2011;32](#32)] | To ensure clarity regarding the ownership of the NFT on a specific chain, it is recommended to add `require(block.chainid == 1, "Invalid Chain")` or the desired chain ID in the functions below.
 
-Alternatively, consider including the chain ID in the URI itself. By doing so, any confusion regarding the chain responsible for owning the NFT will be eliminated. | 2|  null
+Alternatively, consider including the chain ID in the URI itself. By doing so, any confusion regarding the chain responsible for owning the NFT will be eliminated. | 2|  0
 | [[L&#x2011;33](#33)] | Lately, there has been a rise in cases where NFTs are being stolen. These stolen NFTs are then added to platforms, allowing them to be easily converted into liquidity.
 
 Some popular marketplaces, such as Opensea, have already taken steps to combat this issue by introducing a disallowlist feature. This means that if an NFT is reported as stolen, it won't be listed or sold on their platform.
 
-This may increase the project centralization, but it can help solve this problem, if this issue is a concern. | 5|  null
-| [[L&#x2011;34](#34)] | If a number greater than `uint160` is downcasted to an `address`, the upper bytes are truncated, which may mean that more than one value will map to the `address`. | 1|  null
-| [[L&#x2011;35](#35)] | Initializers could be front-run, allowing an attacker to either set their own values, take ownership of the contract, and in the best case forcing a re-deployment. | 4|  null
-| [[L&#x2011;36](#36)] | Users may send ETH by mistake to these contracts. As there is no access control on these functions, the funds will be permanently lost. | 10|  null
-| [[L&#x2011;37](#37)] | If the intention is for the ETH to be used, the function should call another function, otherwise it should revert (e.g. `require(msg.sender == address(weth))`) | 10|  null
+This may increase the project centralization, but it can help solve this problem, if this issue is a concern. | 5|  0
+| [[L&#x2011;34](#34)] | If a number greater than `uint160` is downcasted to an `address`, the upper bytes are truncated, which may mean that more than one value will map to the `address`. | 1|  0
+| [[L&#x2011;35](#35)] | Initializers could be front-run, allowing an attacker to either set their own values, take ownership of the contract, and in the best case forcing a re-deployment. | 4|  0
+| [[L&#x2011;36](#36)] | Users may send ETH by mistake to these contracts. As there is no access control on these functions, the funds will be permanently lost. | 10|  0
+| [[L&#x2011;37](#37)] | If the intention is for the ETH to be used, the function should call another function, otherwise it should revert (e.g. `require(msg.sender == address(weth))`) | 10|  0
 | [[L&#x2011;38](#38)] | This project is using a vulnerable version of some libraries, which have the following issues:
 
 
@@ -106,27 +106,27 @@ Current `@openzeppelin/contracts` version: ^4.8.2
 |MEDIUM|[Improper Input Validation](https://security.snyk.io/vuln/SNYK-JS-OPENZEPPELINCONTRACTS-5425051)|>=3.3.0|<4.9.2|
 |MEDIUM|[Improper Input Validation](https://security.snyk.io/vuln/SNYK-JS-OPENZEPPELINCONTRACTS-5711902)|>=4.7.0|<4.8.3|
 |MEDIUM|[Improper Encoding or Escaping of Output](https://security.snyk.io/vuln/SNYK-JS-OPENZEPPELINCONTRACTS-5838352)|>=4.0.0|<4.9.3|
-|LOW|[Missing Authorization](https://security.snyk.io/vuln/SNYK-JS-OPENZEPPELINCONTRACTS-5672116)|>=4.3.0|<4.9.1| | 60|  null
-| [[L&#x2011;39](#39)] | Check for zero-address to avoid the risk of setting `address(0)` for state variables when deploying. | 86|  null
-| [[L&#x2011;40](#40)] | Check for zero-address to avoid the risk of setting `address(0)` for state variables after an update. | 50|  null
-| [[L&#x2011;41](#41)] | If the length of the arrays are not required to be of the same length, user operations may not be fully executed. | 8|  null
-| [[L&#x2011;42](#42)] | The following contracts can receive ETH, but can not withdraw: ETH is may be sent by users by mistake, and it will be stuck in those contracts. | 4|  null
-| [[L&#x2011;43](#43)] | Some state variables are shadowed by local variables/function parameters, this might result in the use of the wrong variable, in some scenarios. Consider renaming these variables with a different name. | 1|  null
-| [[L&#x2011;44](#44)] | Consider refactoring the code by using `abi.encodeCall` instead of `abi.encodeWithSignature`/`abi.encodeWithSelector`, as the former keeps the code [typo/type safe](https://github.com/OpenZeppelin/openzeppelin-contracts/issues/3693). | 58|  null
+|LOW|[Missing Authorization](https://security.snyk.io/vuln/SNYK-JS-OPENZEPPELINCONTRACTS-5672116)|>=4.3.0|<4.9.1| | 60|  0
+| [[L&#x2011;39](#39)] | Check for zero-address to avoid the risk of setting `address(0)` for state variables when deploying. | 86|  0
+| [[L&#x2011;40](#40)] | Check for zero-address to avoid the risk of setting `address(0)` for state variables after an update. | 50|  0
+| [[L&#x2011;41](#41)] | If the length of the arrays are not required to be of the same length, user operations may not be fully executed. | 8|  0
+| [[L&#x2011;42](#42)] | The following contracts can receive ETH, but can not withdraw: ETH is may be sent by users by mistake, and it will be stuck in those contracts. | 4|  0
+| [[L&#x2011;43](#43)] | Some state variables are shadowed by local variables/function parameters, this might result in the use of the wrong variable, in some scenarios. Consider renaming these variables with a different name. | 1|  0
+| [[L&#x2011;44](#44)] | Consider refactoring the code by using `abi.encodeCall` instead of `abi.encodeWithSignature`/`abi.encodeWithSelector`, as the former keeps the code [typo/type safe](https://github.com/OpenZeppelin/openzeppelin-contracts/issues/3693). | 58|  0
 | [[L&#x2011;45](#45)] | There is a lower bound, but not an upper bound in the Solidity version. Breaking changes are expected in future versions, potentially leading to incompatibility with the existing code.
 
-While a specific version can be specified in a configuration file, it cannot be guaranteed that others including the source files will have the same version. | 1|  null
-| [[L&#x2011;46](#46)] | The following expressions may underflow, as the subtrahend could be greater than the minuend in case the former is multiplied by a large number. | 6|  null
-| [[L&#x2011;47](#47)] | There aren't any checks to avoid an overflow which can happen inside an `unchecked` block, so the following expressions may overflow silently. | 8|  null
-| [[L&#x2011;48](#48)] | These functions can be called with 0 value in the input and this value is not checked for being bigger than 0, that means in some scenarios this can potentially trigger a division by zero. | 13|  null
-| [[L&#x2011;49](#49)] | Consider removing the casting to extend the lifespan of these contracts. | 4|  null
-| [[L&#x2011;50](#50)] | A draft status means that the EIPs they're based on are [not finalized](https://eips.ethereum.org/), and thus there may be breaking changes in even minor releases. Consider using a stable version for these libraries instead of a draft. | 7|  null
-| [[L&#x2011;51](#51)] | Code should follow the best-practice of [CEI](https://blockchain-academy.hs-mittweida.de/courses/solidity-coding-beginners-to-intermediate/lessons/solidity-11-coding-patterns/topic/checks-effects-interactions/), where state variables are updated before any external calls are made. Doing so prevents a large class of reentrancy bugs. | 132|  null
-| [[L&#x2011;52](#52)] | There are some missing limits in these functions, and this could lead to unexpected scenarios. Consider adding a min/max limit for the following values, when appropriate. | 19|  null
+While a specific version can be specified in a configuration file, it cannot be guaranteed that others including the source files will have the same version. | 1|  0
+| [[L&#x2011;46](#46)] | The following expressions may underflow, as the subtrahend could be greater than the minuend in case the former is multiplied by a large number. | 6|  0
+| [[L&#x2011;47](#47)] | There aren't any checks to avoid an overflow which can happen inside an `unchecked` block, so the following expressions may overflow silently. | 8|  0
+| [[L&#x2011;48](#48)] | These functions can be called with 0 value in the input and this value is not checked for being bigger than 0, that means in some scenarios this can potentially trigger a division by zero. | 13|  0
+| [[L&#x2011;49](#49)] | Consider removing the casting to extend the lifespan of these contracts. | 4|  0
+| [[L&#x2011;50](#50)] | A draft status means that the EIPs they're based on are [not finalized](https://eips.ethereum.org/), and thus there may be breaking changes in even minor releases. Consider using a stable version for these libraries instead of a draft. | 7|  0
+| [[L&#x2011;51](#51)] | Code should follow the best-practice of [CEI](https://blockchain-academy.hs-mittweida.de/courses/solidity-coding-beginners-to-intermediate/lessons/solidity-11-coding-patterns/topic/checks-effects-interactions/), where state variables are updated before any external calls are made. Doing so prevents a large class of reentrancy bugs. | 132|  0
+| [[L&#x2011;52](#52)] | There are some missing limits in these functions, and this could lead to unexpected scenarios. Consider adding a min/max limit for the following values, when appropriate. | 19|  0
 | [[L&#x2011;53](#53)] | It is good to add a `require` statement that checks the return value of token transfers, or to use something like OpenZeppelin's `safeTransfer`/`safeTransferFrom`, even if one is sure that the given token reverts in case of a failure.
 
-This reduces the risk to zero even if these contracts are upgreadable, and it also helps with security reviews, as the auditor will not have to check this specific edge case. | 3|  null
-| [[L&#x2011;54](#54)] | If the value is being compared to an input value in order to reject it, rather than allowing it to be converted to an address, the check will pass if the value is larger than `type(uint160).max`, even if, when cast, it matches the gating address. | 1|  null
+This reduces the risk to zero even if these contracts are upgreadable, and it also helps with security reviews, as the auditor will not have to check this specific edge case. | 3|  0
+| [[L&#x2011;54](#54)] | If the value is being compared to an input value in order to reject it, rather than allowing it to be converted to an address, the check will pass if the value is larger than `type(uint160).max`, even if, when cast, it matches the gating address. | 1|  0
 | |Issue|Instances| Gas Savings
 |-|:-|:-:|
 | [[G&#x2011;01](#01)] | Consider pre-compute hashes (e.g. `keccak256("transfer(address,uint256)")` -> `0xa9059cbb`) instead of calculating them inside the contract. | 3|  15
@@ -153,7 +153,7 @@ The `memory` keyword should only be used if the entire struct/array is being ret
 
 If the variable remains unassigned, there is no gas savings unless the variable is public, in which case the compiler-generated non-payable getter deployment cost is saved.
 
-If the state variable is overriding an interface's public function, mark the variable as constant or immutable so that it does not use a storage slot. | 15|  null
+If the state variable is overriding an interface's public function, mark the variable as constant or immutable so that it does not use a storage slot. | 15|  0
 | [[G&#x2011;12](#12)] | Accessing state variables within a function involves an SLOAD operation, but `immutable` variables can be accessed directly without the need of it, thus reducing gas costs. As these state variables are assigned only in the constructor, consider declaring them `immutable`. | 33|  660000
 | [[G&#x2011;13](#13)] | Caching of a state variable replaces each Gwarmaccess (**100 gas**) with a cheaper stack read. Other less obvious fixes/optimizations include having local memory caches of state variable structs, or having local caches of state variable contracts/addresses. | 142|  34800
 | [[G&#x2011;14](#14)] | Prior to Solidity 0.8.10 the compiler inserted extra code, including EXTCODESIZE (**100 gas**), to check for contract existence for external function calls.
@@ -180,19 +180,19 @@ Some additional details:
 >
 >So a function pointer in creation code also refers to the offset of the function in runtime code, which requires the function to actually be present in runtime code.
 >
->For direct calls to internal contract functions the full encoding of the function expression is bypassed by the compiler. However, this bypassing did not happen for internal library functions and for free functions called via modules, causing the undesirable behaviour that is now fixed in this release. | 71|  null
+>For direct calls to internal contract functions the full encoding of the function expression is bypassed by the compiler. However, this bypassing did not happen for internal library functions and for free functions called via modules, causing the undesirable behaviour that is now fixed in this release. | 71|  0
 | [[G&#x2011;17](#17)] | Consider refactoring the function arguments from `memory` to `calldata` when they are immutable, as `calldata` is cheaper. | 64|  21484
 | [[G&#x2011;18](#18)] | If the old value is equal to the new value, not re-storing the value will avoid a Gsreset (**2900 gas**), potentially at the expense of a Gcoldsload (**2100 gas**) or a Gwarmaccess (**100 gas**) | 60|  42000
 | [[G&#x2011;19](#19)] | Emitting an event inside a loop performs a `LOG` op N times, where N is the loop length. Consider refactoring the code to emit the event only once at the end of loop. Gas savings should be multiplied by the average loop length. | 3|  3078
 | [[G&#x2011;20](#20)] | Consider using a local `storage` or `calldata` variable when accessing a mapping/array value multiple times.
 
 This can be useful to avoid recalculating the mapping hash and/or the array offsets. | 42|  2184
-| [[G&#x2011;21](#21)] | Getters for public state variables are automatically generated with public variables, so there is no need to code them manually, as it adds an unnecessary overhead. | 16|  null
+| [[G&#x2011;21](#21)] | Getters for public state variables are automatically generated with public variables, so there is no need to code them manually, as it adds an unnecessary overhead. | 16|  0
 | [[G&#x2011;22](#22)] | Saves deployment gas due to the compiler not having to create non-payable getter functions for deployment calldata, not having to store the bytes of the value outside of where it's used, and not adding another entry to the method ID table. | 12|  100872
 | [[G&#x2011;23](#23)] | Use `uint256(1)` and `uint256(2)` for `true`/`false` to avoid a Gwarmaccess (100 gas), and to avoid Gsset (20000 gas) when changing from `false` to `true`, after having been `true` in the past. See [source](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/58f635312aa21f947cae5f8578638a85aa2519f5/contracts/security/ReentrancyGuard.sol#L23-L27). | 17|  290700
-| [[G&#x2011;24](#24)] | Checks that can be performed earlier should come before checks that involve state variables, function calls, and calculations. By doing these checks first, the function is able to revert before wasting a Gcoldsload (*2100 gas*) in a function that may ultimately revert. | 10|  null
+| [[G&#x2011;24](#24)] | Checks that can be performed earlier should come before checks that involve state variables, function calls, and calculations. By doing these checks first, the function is able to revert before wasting a Gcoldsload (*2100 gas*) in a function that may ultimately revert. | 10|  0
 | [[G&#x2011;25](#25)] | Consider the use of a custom `error`, as it leads to a cheaper deploy cost and run time cost. The run time cost is only relevant when the revert condition is met. | 246|  7134
-| [[G&#x2011;26](#26)] | Consider caching the result instead of re-calling the function when possible. Note: this also includes casts, which cost between 42-46 gas, depending on the type. | 26|  null
+| [[G&#x2011;26](#26)] | Consider caching the result instead of re-calling the function when possible. Note: this also includes casts, which cost between 42-46 gas, depending on the type. | 26|  0
 | [[G&#x2011;27](#27)] | If a function modifier such as `onlyOwner` is used, the function will revert if a normal user tries to pay the function.
 
 Marking the function as `payable` will lower the gas for legitimate callers, as the compiler will not include checks for whether a payment was provided.
@@ -228,7 +228,7 @@ Note that it might be beneficial to use reduced-size types when dealing with sto
 | [[G&#x2011;41](#41)] | Function that are `public`/`external` and `public` state variable names can be optimized to save gas.
 
 Method IDs that have two leading zero bytes can save **128 gas** each during deployment, and renaming functions to have lower method IDs will save **22 gas** per call, per sorted position shifted. [Reference](https://blog.emn178.cc/en/post/solidity-gas-optimization-function-name/) | 66|  1452
-| [[G&#x2011;42](#42)] | Emit any transfer events if the EIP requires it, but avoid doing the actual call when the amount is zero. | 9|  null
+| [[G&#x2011;42](#42)] | Emit any transfer events if the EIP requires it, but avoid doing the actual call when the amount is zero. | 9|  0
 | [[G&#x2011;43](#43)] | Avoid an assignment by deleting the value instead of setting it to zero, as it's [cheaper](https://gist.github.com/DadeKuma/ea874815202fc77e9d81f81a047c1e5e). | 23|  115
 | [[G&#x2011;44](#44)] | `X * 2` is equivalent to `X << 1` and `X / 2` is the same as `X >> 1`.
 
@@ -249,7 +249,7 @@ v0.8.3 has a better struct packing and cheaper multiple storage reads
 
 v0.8.4 has custom errors, which are cheaper at deployment than revert/require strings
 
-v0.8.10 has external calls skip contract existence checks if the external call has a return value | 8|  null
+v0.8.10 has external calls skip contract existence checks if the external call has a return value | 8|  0
 | [[G&#x2011;48](#48)] | `payable` functions cost less gas to execute, since the compiler does not have to add extra checks to ensure that a payment wasn't provided.
 
 A `constructor` can safely be marked as `payable`, since only the deployer would be able to pass funds, and the project itself would not pass any funds. | 50|  1050
@@ -283,64 +283,64 @@ for(uint256 i; i < length;) {
 
 It is possible to activate the IR-based code generator through the command line by using the flag `--via-ir` or by including the option `{"viaIR": true}`.
 
-Keep in mind that compiling with this option may take longer. However, you can simply test it before deploying your code. If you find that it provides better performance, you can add the `--via-ir` flag to your deploy command. | 1|  null
+Keep in mind that compiling with this option may take longer. However, you can simply test it before deploying your code. If you find that it provides better performance, you can add the `--via-ir` flag to your deploy command. | 1|  0
 | |Issue|Instances| Gas Savings
 |-|:-|:-:|
-| [[N&#x2011;01](#01)] | All `external`/`public` functions should extend an `interface`. This is useful to make sure that the whole API is extracted. | 373|  null
-| [[N&#x2011;02](#02)] | Custom errors are available from solidity version 0.8.4. Custom errors are more easily processed in try-catch blocks, and are easier to re-use and maintain. | 246|  null
-| [[N&#x2011;03](#03)] | Consider breaking down these blocks into more manageable units, by splitting things into utility functions, by reducing nesting, and by using early returns. | 48|  null
-| [[N&#x2011;04](#04)] | Events should be emitted when sensitive changes are made to the contracts, but some functions lack them. | 14|  null
-| [[N&#x2011;05](#05)] | It is better to use `import {<identifier>} from "<file.sol>"` instead of `import "<file.sol>"` to improve readability and speed up the compilation time. | 345|  null
-| [[N&#x2011;06](#06)] | Not only is wasteful in terms of gas, but this is especially problematic when an event is emitted and the old and new values set are the same, as listeners might not expect this kind of scenario. | 60|  null
+| [[N&#x2011;01](#01)] | All `external`/`public` functions should extend an `interface`. This is useful to make sure that the whole API is extracted. | 373|  0
+| [[N&#x2011;02](#02)] | Custom errors are available from solidity version 0.8.4. Custom errors are more easily processed in try-catch blocks, and are easier to re-use and maintain. | 246|  0
+| [[N&#x2011;03](#03)] | Consider breaking down these blocks into more manageable units, by splitting things into utility functions, by reducing nesting, and by using early returns. | 48|  0
+| [[N&#x2011;04](#04)] | Events should be emitted when sensitive changes are made to the contracts, but some functions lack them. | 14|  0
+| [[N&#x2011;05](#05)] | It is better to use `import {<identifier>} from "<file.sol>"` instead of `import "<file.sol>"` to improve readability and speed up the compilation time. | 345|  0
+| [[N&#x2011;06](#06)] | Not only is wasteful in terms of gas, but this is especially problematic when an event is emitted and the old and new values set are the same, as listeners might not expect this kind of scenario. | 60|  0
 | [[N&#x2011;07](#07)] | Taking zero as a valid argument without checks can lead to severe security issues in some cases.
 
-If using a zero argument is mandatory, consider using descriptive constants or an enum instead of passing zero directly on function calls, as that might be error-prone, to fully describe the caller's intention. | 98|  null
-| [[N&#x2011;08](#08)] | It is recommended to always use `uint256/int256` instead of `uint/int` in function parameters, since they are used for function signatures. | 7|  null
-| [[N&#x2011;09](#09)] | Parent contracts should use [named imports](https://docs.soliditylang.org/en/latest/layout-of-source-files.html#syntax-and-semantics) to improve the code readability. | 60|  null
+If using a zero argument is mandatory, consider using descriptive constants or an enum instead of passing zero directly on function calls, as that might be error-prone, to fully describe the caller's intention. | 98|  0
+| [[N&#x2011;08](#08)] | It is recommended to always use `uint256/int256` instead of `uint/int` in function parameters, since they are used for function signatures. | 7|  0
+| [[N&#x2011;09](#09)] | Parent contracts should use [named imports](https://docs.soliditylang.org/en/latest/layout-of-source-files.html#syntax-and-semantics) to improve the code readability. | 60|  0
 | [[N&#x2011;10](#10)] | Declaring named returns, but not using them, is confusing to the reader. Consider either completely removing them (by declaring just the type without a name), or remove the return statement and do a variable assignment.
 
-This would improve the readability of the code, and it may also help reduce regressions during future code refactors. | 57|  null
-| [[N&#x2011;11](#11)] | These `struct` are never used by any other source file, consider removing them. | 8|  null
-| [[N&#x2011;12](#12)] | The following events are never used, consider to remove them. | 3|  null
-| [[N&#x2011;13](#13)] | Consider removing the name of these unused arguments to avoid compiler warnings. | 2|  null
-| [[N&#x2011;14](#14)] | Consider removing any unusued state variable to improve the readability of the codebase. | 62|  null
+This would improve the readability of the code, and it may also help reduce regressions during future code refactors. | 57|  0
+| [[N&#x2011;11](#11)] | These `struct` are never used by any other source file, consider removing them. | 8|  0
+| [[N&#x2011;12](#12)] | The following events are never used, consider to remove them. | 3|  0
+| [[N&#x2011;13](#13)] | Consider removing the name of these unused arguments to avoid compiler warnings. | 2|  0
+| [[N&#x2011;14](#14)] | Consider removing any unusued state variable to improve the readability of the codebase. | 62|  0
 | [[N&#x2011;15](#15)] | Those functions should be declared as `external` instead of `public`, as they are never called internally by the contract.
 
-Contracts are allowed to override their parents' functions and change the visibility from external to public. | 82|  null
-| [[N&#x2011;16](#16)] | These contracts import some OpenZeppelin libraries, but they are using an old version. | 60|  null
-| [[N&#x2011;17](#17)] | Keeping the same constants in different files may cause some problems, as the values could become out of sync when only one location is updated; reading constants from a single file is preferable. This should also be preferred for gas optimizations. | 54|  null
-| [[N&#x2011;18](#18)] | The contracts below already extend the specified contract, so there is no need to list it in the inheritance list again. | 2|  null
-| [[N&#x2011;19](#19)] | These contracts import an ownable library, but there aren't any functions reserved to `onlyOwner`. If this is an error, fix the access control for the appropriate functions; otherwise, remove this import. | 4|  null
-| [[N&#x2011;20](#20)] | These contracts import a pausable library, but there aren't any functions reserved to pause/unpause the contract. If this is an error, add the `whenNotPaused` modifier to the appropriate functions; otherwise, remove this import. | 3|  null
-| [[N&#x2011;21](#21)] | It's better to declare the hardcoded addresses as `immutable` state variables, as this will facilitate deployment on other chains. | 2|  null
-| [[N&#x2011;22](#22)] | Consider using an enum instead of hardcoding an index access to make the code easier to understand. | 18|  null
-| [[N&#x2011;23](#23)] | It's not necessary to initialize a variable with a zero value, as it's the default behaviour, and it's actually worse in gas terms as it adds an overhead. | 65|  null
-| [[N&#x2011;24](#24)] | Consider adding `pausable` to the following contracts so it's possible to stop them in case of an emergency. | 31|  null
-| [[N&#x2011;25](#25)] | Consider adding a global pause mechanism to pause all the contracts at once, instead of doing it one by one: this might be useful in case of an emergency. | 3|  null
-| [[N&#x2011;26](#26)] | These statements should be refactored to a separate function, as there are multiple parts of the codebase that use the same logic, to improve the code readability and reduce code duplication. | 27|  null
-| [[N&#x2011;27](#27)] | Some parts of the codebase use `require` statements, while others use custom `error`s. Consider refactoring the code to use the same approach: the following findings represent the minority of `require` vs `error`, and they show the first occurance in each file, for brevity. | 6|  null
+Contracts are allowed to override their parents' functions and change the visibility from external to public. | 82|  0
+| [[N&#x2011;16](#16)] | These contracts import some OpenZeppelin libraries, but they are using an old version. | 60|  0
+| [[N&#x2011;17](#17)] | Keeping the same constants in different files may cause some problems, as the values could become out of sync when only one location is updated; reading constants from a single file is preferable. This should also be preferred for gas optimizations. | 54|  0
+| [[N&#x2011;18](#18)] | The contracts below already extend the specified contract, so there is no need to list it in the inheritance list again. | 2|  0
+| [[N&#x2011;19](#19)] | These contracts import an ownable library, but there aren't any functions reserved to `onlyOwner`. If this is an error, fix the access control for the appropriate functions; otherwise, remove this import. | 4|  0
+| [[N&#x2011;20](#20)] | These contracts import a pausable library, but there aren't any functions reserved to pause/unpause the contract. If this is an error, add the `whenNotPaused` modifier to the appropriate functions; otherwise, remove this import. | 3|  0
+| [[N&#x2011;21](#21)] | It's better to declare the hardcoded addresses as `immutable` state variables, as this will facilitate deployment on other chains. | 2|  0
+| [[N&#x2011;22](#22)] | Consider using an enum instead of hardcoding an index access to make the code easier to understand. | 18|  0
+| [[N&#x2011;23](#23)] | It's not necessary to initialize a variable with a zero value, as it's the default behaviour, and it's actually worse in gas terms as it adds an overhead. | 65|  0
+| [[N&#x2011;24](#24)] | Consider adding `pausable` to the following contracts so it's possible to stop them in case of an emergency. | 31|  0
+| [[N&#x2011;25](#25)] | Consider adding a global pause mechanism to pause all the contracts at once, instead of doing it one by one: this might be useful in case of an emergency. | 3|  0
+| [[N&#x2011;26](#26)] | These statements should be refactored to a separate function, as there are multiple parts of the codebase that use the same logic, to improve the code readability and reduce code duplication. | 27|  0
+| [[N&#x2011;27](#27)] | Some parts of the codebase use `require` statements, while others use custom `error`s. Consider refactoring the code to use the same approach: the following findings represent the minority of `require` vs `error`, and they show the first occurance in each file, for brevity. | 6|  0
 | [[N&#x2011;28](#28)] | These functions might be a problem if the logic changes before the contract is deployed, as the developer must remember to syncronize the logic between all the function instances.
 
-Consider using a single function instead of duplicating the code, for example by using a `library`, or through inheritance. | 84|  null
+Consider using a single function instead of duplicating the code, for example by using a `library`, or through inheritance. | 84|  0
 | [[N&#x2011;29](#29)] | Consider limiting the number of iterations in loops with an explicit revert reason to avoid iterating an array that is too large.
 
-The function would eventually revert if out of gas anyway, but by limiting it the user avoids wasting too much gas, as the loop doesn't execute if an excessive value is provided. | 42|  null
-| [[N&#x2011;30](#30)] | All unused code should be removed to improve the readability and the quality of the codebase. | 1|  null
-| [[N&#x2011;31](#31)] | Use a scientific notation rather than decimal literals (e.g. `1e6` instead of `1000000`), for better code readability. | 26|  null
-| [[N&#x2011;32](#32)] | Use a scientific notation rather than exponentiation (e.g. `1e18` instead of `10**18`): although the compiler is capable of optimizing it, it is considered good coding practice to utilize idioms that don't rely on compiler optimization, whenever possible. | 2|  null
-| [[N&#x2011;33](#33)] | Large hardcoded numbers in code can be difficult to read. Consider using underscores for number literals to improve readability (e.g `1234567` -> `1_234_567`). Consider using an underscore for every third digit from the right. | 17|  null
-| [[N&#x2011;34](#34)] | The codebase uses both `int`/`uint` and `int256`/`uint256` at the same time. To improve the consistency, even if they are aliases, it is recommended to use only a variant, preferably `int256`/`uint256` as they are the preferred type names. | 7|  null
+The function would eventually revert if out of gas anyway, but by limiting it the user avoids wasting too much gas, as the loop doesn't execute if an excessive value is provided. | 42|  0
+| [[N&#x2011;30](#30)] | All unused code should be removed to improve the readability and the quality of the codebase. | 1|  0
+| [[N&#x2011;31](#31)] | Use a scientific notation rather than decimal literals (e.g. `1e6` instead of `1000000`), for better code readability. | 26|  0
+| [[N&#x2011;32](#32)] | Use a scientific notation rather than exponentiation (e.g. `1e18` instead of `10**18`): although the compiler is capable of optimizing it, it is considered good coding practice to utilize idioms that don't rely on compiler optimization, whenever possible. | 2|  0
+| [[N&#x2011;33](#33)] | Large hardcoded numbers in code can be difficult to read. Consider using underscores for number literals to improve readability (e.g `1234567` -> `1_234_567`). Consider using an underscore for every third digit from the right. | 17|  0
+| [[N&#x2011;34](#34)] | The codebase uses both `int`/`uint` and `int256`/`uint256` at the same time. To improve the consistency, even if they are aliases, it is recommended to use only a variant, preferably `int256`/`uint256` as they are the preferred type names. | 7|  0
 | [[N&#x2011;35](#35)] | Consider refactoring the following code, as double casting is confusing, and, in some scenarios, it may introduce unexpected truncations or rounding issues.
 
-Furthermore, double type casting can make the code less readable and harder to maintain, increasing the likelihood of errors and misunderstandings during development and debugging. | 10|  null
-| [[N&#x2011;36](#36)] | It is a good practice to give time for users to react and adjust to critical changes. A timelock provides more guarantees and reduces the level of trust required, thus decreasing risk for users. It also indicates that the project is legitimate (less risk of a malicious owner making a sandwich attack on a user). Consider adding a timelock to the following functions: | 85|  null
-| [[N&#x2011;37](#37)] | Use a more recent version of Solidity: the latest version is 0.8.21, but it's safer to use at least the version 0.8.19 to get the latest bugfixes and features when deploying on L2. | 67|  null
-| [[N&#x2011;38](#38)] | Consider using `SafeTransferLib.safeTransferETH` or `Address.sendValue` for clearer semantic meaning instead of using a low level `call`. | 5|  null
-| [[N&#x2011;39](#39)] | Earlier versions of solidity can use `uint<n>(-1)` instead. Expressions not including the `- 1` can often be re-written to accomodate the change (e.g. by using a `>` rather than a `>=`, which will also save some gas). | 2|  null
-| [[N&#x2011;40](#40)] | Constants should be defined instead of using magic numbers. | 205|  null
-| [[N&#x2011;41](#41)] | Consider splitting long arithmetic calculations into multiple steps to improve the code readability. | 71|  null
-| [[N&#x2011;42](#42)] | There are [units](https://docs.soliditylang.org/en/latest/units-and-global-variables.html#time-units) for seconds, minutes, hours, days, and weeks, and since they're defined, they should be used | 6|  null
-| [[N&#x2011;43](#43)] | Some functions don't have a body, consider commenting why, or refactor the code and remove these functions. | 21|  null
+Furthermore, double type casting can make the code less readable and harder to maintain, increasing the likelihood of errors and misunderstandings during development and debugging. | 10|  0
+| [[N&#x2011;36](#36)] | It is a good practice to give time for users to react and adjust to critical changes. A timelock provides more guarantees and reduces the level of trust required, thus decreasing risk for users. It also indicates that the project is legitimate (less risk of a malicious owner making a sandwich attack on a user). Consider adding a timelock to the following functions: | 85|  0
+| [[N&#x2011;37](#37)] | Use a more recent version of Solidity: the latest version is 0.8.21, but it's safer to use at least the version 0.8.19 to get the latest bugfixes and features when deploying on L2. | 67|  0
+| [[N&#x2011;38](#38)] | Consider using `SafeTransferLib.safeTransferETH` or `Address.sendValue` for clearer semantic meaning instead of using a low level `call`. | 5|  0
+| [[N&#x2011;39](#39)] | Earlier versions of solidity can use `uint<n>(-1)` instead. Expressions not including the `- 1` can often be re-written to accomodate the change (e.g. by using a `>` rather than a `>=`, which will also save some gas). | 2|  0
+| [[N&#x2011;40](#40)] | Constants should be defined instead of using magic numbers. | 205|  0
+| [[N&#x2011;41](#41)] | Consider splitting long arithmetic calculations into multiple steps to improve the code readability. | 71|  0
+| [[N&#x2011;42](#42)] | There are [units](https://docs.soliditylang.org/en/latest/units-and-global-variables.html#time-units) for seconds, minutes, hours, days, and weeks, and since they're defined, they should be used | 6|  0
+| [[N&#x2011;43](#43)] | Some functions don't have a body, consider commenting why, or refactor the code and remove these functions. | 21|  0
 | [[N&#x2011;44](#44)] | There are some automated tools that will flag a project as having higher complexity if there is inline-assembly, so it's better to avoid using assembly if it's not needed.
 
 
@@ -350,29 +350,29 @@ Consider using the following alternatives:
 
 - `size := extcodesize()` -> `uint256 size = address().code.length`
 
-- `hash := extcodehash()` -> `bytes32 hash = address().codehash` | 1|  null
-| [[N&#x2011;45](#45)] | This is a [best practice](https://docs.soliditylang.org/en/latest/style-guide.html#control-structures) that should be followed.  | 57|  null
-| [[N&#x2011;46](#46)] | Consider grouping all the system constants under a single file. This finding shows only the first constant for each file, for brevity. | 16|  null
-| [[N&#x2011;47](#47)] | The following events are never emitted, consider to remove them. | 3|  null
+- `hash := extcodehash()` -> `bytes32 hash = address().codehash` | 1|  0
+| [[N&#x2011;45](#45)] | This is a [best practice](https://docs.soliditylang.org/en/latest/style-guide.html#control-structures) that should be followed.  | 57|  0
+| [[N&#x2011;46](#46)] | Consider grouping all the system constants under a single file. This finding shows only the first constant for each file, for brevity. | 16|  0
+| [[N&#x2011;47](#47)] | The following events are never emitted, consider to remove them. | 3|  0
 | [[N&#x2011;48](#48)] | Index event fields make the field more quickly accessible to off-chain tools that parse events. However, note that each index field costs extra gas during emission, so it's not necessarily best to index the maximum allowed per event (three fields).
 
-Each event should use three `indexed` fields if there are three or more fields, and gas usage is not particularly of concern for the events in question. If there are fewer than three fields, all of the fields should be indexed. | 20|  null
-| [[N&#x2011;49](#49)] | Since Solidity 0.8.13 it is better to use the annotation `assembly ("memory-safe") {}` instead of the comment `/// @solidity memory-safe-assembly`, which is deprecated and will be removed in a [later release](https://docs.soliditylang.org/en/latest/assembly.html#memory-safety). | 2|  null
+Each event should use three `indexed` fields if there are three or more fields, and gas usage is not particularly of concern for the events in question. If there are fewer than three fields, all of the fields should be indexed. | 20|  0
+| [[N&#x2011;49](#49)] | Since Solidity 0.8.13 it is better to use the annotation `assembly ("memory-safe") {}` instead of the comment `/// @solidity memory-safe-assembly`, which is deprecated and will be removed in a [later release](https://docs.soliditylang.org/en/latest/assembly.html#memory-safety). | 2|  0
 | [[N&#x2011;50](#50)] | Some files use `>=`, while others use `^`. The instances below are examples of the method that has the fewest instances for a specific version.
 
 
 
-Occurrences: `^`: 66 `>=`: 1 | 1|  null
-| [[N&#x2011;51](#51)] | Consider using a normal Solidity version instead of an experimental one. | 3|  null
+Occurrences: `^`: 66 `>=`: 1 | 1|  0
+| [[N&#x2011;51](#51)] | Consider using a normal Solidity version instead of an experimental one. | 3|  0
 | [[N&#x2011;52](#52)] | Locking the pragma helps avoid accidental deploys with an outdated compiler version that may introduce bugs and unexpected vulnerabilities.
 
-Floating pragma is meant to be used for libraries and contracts that have external users and need backward compatibility. | 64|  null
-| [[N&#x2011;53](#53)] | Like the zero-address check, an empty bytes assignment might be undesiderable, but the following functions don't have it. | 18|  null
-| [[N&#x2011;54](#54)] | Starting from version `0.8.4`, the recommended approach for appending bytes is to use `bytes.concat` instead of `abi.encodePacked`. | 18|  null
-| [[N&#x2011;55](#55)] | Consider casting to `bytes32` directly instead of using `abi.encodePacked` when there is just a single argument, to make the code more clear. | 2|  null
+Floating pragma is meant to be used for libraries and contracts that have external users and need backward compatibility. | 64|  0
+| [[N&#x2011;53](#53)] | Like the zero-address check, an empty bytes assignment might be undesiderable, but the following functions don't have it. | 18|  0
+| [[N&#x2011;54](#54)] | Starting from version `0.8.4`, the recommended approach for appending bytes is to use `bytes.concat` instead of `abi.encodePacked`. | 18|  0
+| [[N&#x2011;55](#55)] | Consider casting to `bytes32` directly instead of using `abi.encodePacked` when there is just a single argument, to make the code more clear. | 2|  0
 | [[N&#x2011;56](#56)] | Constant variables and immutable variables serve different purposes and should be used accordingly.
 
-To clarify, constant variables are used for literal values in the code, whereas immutable variables are ideal for values calculated or passed into the constructor. | 5|  null
+To clarify, constant variables are used for literal values in the code, whereas immutable variables are ideal for values calculated or passed into the constructor. | 5|  0
 | [[N&#x2011;57](#57)] | This is a [best practice](https://docs.soliditylang.org/en/latest/style-guide.html#order-of-layout) that should be followed.
 
 Inside each contract, library or interface, use the following order:
@@ -382,8 +382,8 @@ Inside each contract, library or interface, use the following order:
 3. Events
 4. Errors
 5. Modifiers
-6. Functions | 12|  null
-| [[N&#x2011;58](#58)] | If a transaction reverts, it can be confusing to debug if there aren't any messages. Add a descriptive message to all `require`/`revert` statements. | 8|  null
+6. Functions | 12|  0
+| [[N&#x2011;58](#58)] | If a transaction reverts, it can be confusing to debug if there aren't any messages. Add a descriptive message to all `require`/`revert` statements. | 8|  0
 | [[N&#x2011;59](#59)] | This is a [best practice](https://docs.soliditylang.org/en/latest/style-guide.html#order-of-functions) that should be followed.
 
 Functions should be grouped according to their visibility and ordered:
@@ -396,112 +396,112 @@ Functions should be grouped according to their visibility and ordered:
 6. internal
 7. private
 
-Within a grouping, place the view and pure functions last. | 197|  null
-| [[N&#x2011;60](#60)] | Consider splitting long functions into multiple, smaller functions to improve the code readability. | 48|  null
-| [[N&#x2011;61](#61)] | Consider moving the logic outside the `else` block, and then removing it (it's not required, as the function is returning a value). There will be one less level of nesting, which will improve the quality of the codebase. | 8|  null
+Within a grouping, place the view and pure functions last. | 197|  0
+| [[N&#x2011;60](#60)] | Consider splitting long functions into multiple, smaller functions to improve the code readability. | 48|  0
+| [[N&#x2011;61](#61)] | Consider moving the logic outside the `else` block, and then removing it (it's not required, as the function is returning a value). There will be one less level of nesting, which will improve the quality of the codebase. | 8|  0
 | [[N&#x2011;62](#62)] | Well-organized data structures make code reviews easier, which may lead to fewer bugs. Consider combining related mappings into mappings to structs, so it's clear what data is related. | 5|  120504
-| [[N&#x2011;63](#63)] | According to the [documentation](https://docs.soliditylang.org/en/latest/style-guide.html#other-recommendations) strings should use a double quote instead of a single one. | 12|  null
-| [[N&#x2011;64](#64)] | Maximum suggested line length is 120 characters according to the [documentation](https://docs.soliditylang.org/en/latest/style-guide.html#maximum-line-length). | 350|  null
-| [[N&#x2011;65](#65)] | Consider removing duplicate import statements, as they are already imported once. | 1|  null
-| [[N&#x2011;66](#66)] | The contract's interface should be imported first, followed by each of the interfaces it uses, followed by all other files. The examples below do not follow this layout. | 33|  null
-| [[N&#x2011;67](#67)] | Some functions have an incomplete NatSpec: add a `@notice` notation to describe the function to improve the code documentation. | 295|  null
-| [[N&#x2011;68](#68)] | Some functions have an incomplete NatSpec: add a `@param` notation to describe the function parameters to improve the code documentation. | 449|  null
-| [[N&#x2011;69](#69)] | Some functions have an incomplete NatSpec: add a `@return` notation to describe the function return value to improve the code documentation. | 241|  null
-| [[N&#x2011;70](#70)] | The following errors are never used, consider to remove them. | 1|  null
-| [[N&#x2011;71](#71)] | [ERC721A](https://www.erc721a.org/) is an implementation of IERC721 with significant gas savings for minting multiple NFTs in a single transaction. | 5|  null
-| [[N&#x2011;72](#72)] | Consider using a `library` instead of a `contract` to provide utility functions. | 2|  null
-| [[N&#x2011;73](#73)] | Consider always adding an explicit visibility modifier for variables, as the default is `internal`. | 10|  null
-| [[N&#x2011;74](#74)] | Use [alternative variants](https://www.zdnet.com/article/mysql-drops-master-slave-and-blacklist-whitelist-terminology/), e.g. allowlist/denylist instead of whitelist/blacklist. | 7|  null
-| [[N&#x2011;75](#75)] | This can help to prevent hackers from using stolen tokens, but as a side effect it will increase the project centralization. | 27|  null
+| [[N&#x2011;63](#63)] | According to the [documentation](https://docs.soliditylang.org/en/latest/style-guide.html#other-recommendations) strings should use a double quote instead of a single one. | 12|  0
+| [[N&#x2011;64](#64)] | Maximum suggested line length is 120 characters according to the [documentation](https://docs.soliditylang.org/en/latest/style-guide.html#maximum-line-length). | 350|  0
+| [[N&#x2011;65](#65)] | Consider removing duplicate import statements, as they are already imported once. | 1|  0
+| [[N&#x2011;66](#66)] | The contract's interface should be imported first, followed by each of the interfaces it uses, followed by all other files. The examples below do not follow this layout. | 33|  0
+| [[N&#x2011;67](#67)] | Some functions have an incomplete NatSpec: add a `@notice` notation to describe the function to improve the code documentation. | 295|  0
+| [[N&#x2011;68](#68)] | Some functions have an incomplete NatSpec: add a `@param` notation to describe the function parameters to improve the code documentation. | 449|  0
+| [[N&#x2011;69](#69)] | Some functions have an incomplete NatSpec: add a `@return` notation to describe the function return value to improve the code documentation. | 241|  0
+| [[N&#x2011;70](#70)] | The following errors are never used, consider to remove them. | 1|  0
+| [[N&#x2011;71](#71)] | [ERC721A](https://www.erc721a.org/) is an implementation of IERC721 with significant gas savings for minting multiple NFTs in a single transaction. | 5|  0
+| [[N&#x2011;72](#72)] | Consider using a `library` instead of a `contract` to provide utility functions. | 2|  0
+| [[N&#x2011;73](#73)] | Consider always adding an explicit visibility modifier for variables, as the default is `internal`. | 10|  0
+| [[N&#x2011;74](#74)] | Use [alternative variants](https://www.zdnet.com/article/mysql-drops-master-slave-and-blacklist-whitelist-terminology/), e.g. allowlist/denylist instead of whitelist/blacklist. | 7|  0
+| [[N&#x2011;75](#75)] | This can help to prevent hackers from using stolen tokens, but as a side effect it will increase the project centralization. | 27|  0
 | [[N&#x2011;76](#76)] | The following functions are missing some parameters when emitting an event: when dealing with a source address which uses the value of `msg.sender`, the `msg.sender` value should be specified in every event.
 
-Otherwise, a contract or web page listening to events cannot react to connected users: basically, those events cannot be used properly. | 184|  null
-| [[N&#x2011;77](#77)] | Surround top level declarations in Solidity source with two blank lines. [Documentation](https://docs.soliditylang.org/en/latest/style-guide.html#blank-lines) | 181|  null
-| [[N&#x2011;78](#78)] | Starting with Solidity version [0.8.8](https://docs.soliditylang.org/en/latest/contracts.html#function-overriding), using the override keyword when the function solely overrides an interface function, and the function doesn't exist in multiple base contracts, is unnecessary. | 92|  null
-| [[N&#x2011;79](#79)] | If a function has too many parameters, replacing them with a struct can improve code readability and maintainability, increase reusability, and reduce the likelihood of errors when passing the parameters. | 119|  null
-| [[N&#x2011;80](#80)] | Some features might not be properly implemented, as there are commented `TODOs`. Review the comments to ensure that everything is implemented, and remove them before deploying. | 15|  null
-| [[N&#x2011;81](#81)] | Consider adding a comment with the variable name even if it's not used, to improve the code readability. | 41|  null
-| [[N&#x2011;82](#82)] | Avoid typos, and proper nouns should be capitalized. | 48|  null
+Otherwise, a contract or web page listening to events cannot react to connected users: basically, those events cannot be used properly. | 184|  0
+| [[N&#x2011;77](#77)] | Surround top level declarations in Solidity source with two blank lines. [Documentation](https://docs.soliditylang.org/en/latest/style-guide.html#blank-lines) | 181|  0
+| [[N&#x2011;78](#78)] | Starting with Solidity version [0.8.8](https://docs.soliditylang.org/en/latest/contracts.html#function-overriding), using the override keyword when the function solely overrides an interface function, and the function doesn't exist in multiple base contracts, is unnecessary. | 92|  0
+| [[N&#x2011;79](#79)] | If a function has too many parameters, replacing them with a struct can improve code readability and maintainability, increase reusability, and reduce the likelihood of errors when passing the parameters. | 119|  0
+| [[N&#x2011;80](#80)] | Some features might not be properly implemented, as there are commented `TODOs`. Review the comments to ensure that everything is implemented, and remove them before deploying. | 15|  0
+| [[N&#x2011;81](#81)] | Consider adding a comment with the variable name even if it's not used, to improve the code readability. | 41|  0
+| [[N&#x2011;82](#82)] | Avoid typos, and proper nouns should be capitalized. | 48|  0
 | [[N&#x2011;83](#83)] | Events are generally emitted when sensitive changes are made to the contracts.
 
-However, some are missing important parameters, as they should include both the new value and old value where possible. | 60|  null
-| [[N&#x2011;84](#84)] | A 100% test coverage is not foolproof, but it helps immensely in reducing the amount of bugs that may occur. | 1|  null
+However, some are missing important parameters, as they should include both the new value and old value where possible. | 60|  0
+| [[N&#x2011;84](#84)] | A 100% test coverage is not foolproof, but it helps immensely in reducing the amount of bugs that may occur. | 1|  0
 | [[N&#x2011;85](#85)] | This includes: large code bases, or code with lots of inline-assembly, complicated math, or complicated interactions between multiple contracts.
 
 Invariant fuzzers such as Echidna require the test writer to come up with invariants which should not be violated under any circumstances, and the fuzzer tests various inputs and function calls to ensure that the invariants always hold.
 
-Even code with 100% code coverage can still have bugs due to the order of the operations a user performs, and invariant fuzzers may help significantly. | 1|  null
-| [[N&#x2011;86](#86)] | Some lines use `// x` and some use `//x`. The instances below point out the usages that don't follow the majority, within each file. | 154|  null
-| [[N&#x2011;87](#87)] | If a reentrancy occurs, some events may be emitted in an unexpected order, and this may be a problem if a third party expects a specific order for these events. Ensure that events follow the best practice of CEI. | 115|  null
-| [[N&#x2011;88](#88)] | A duplicated function name in the same contract might have problems with automated auditing tools, so it should be avoided. Consider always using a different name for functions to improve the readability of the code. | 4|  null
-| [[N&#x2011;89](#89)] | If some functions are only allowed to be called by some specific users, consider using a `modifier` instead of checking with a `require` statement, especially if this check is done in multiple functions. | 27|  null
-| [[N&#x2011;90](#90)] | Interfaces should be declared on a separate file and not on the same file where the contract resides in. | 2|  null
-| [[N&#x2011;91](#91)] | Consider adding some parameters to the error to indicate which user or values caused the failure. | 23|  null
-| [[N&#x2011;92](#92)] | Variables which are not constants or immutable should **not** be declared in all uppercase. | 6|  null
-| [[N&#x2011;93](#93)] | This is useful to avoid doing some [typo bugs](https://www.moserware.com/2008/01/constants-on-left-are-better-but-this.html). | 76|  null
-| [[N&#x2011;94](#94)] | Consider adding some comments on critical state variables to explain what they are supposed to do: this will help for future code reviews. | 172|  null
-| [[N&#x2011;95](#95)] | Large and/or complex functions should have more comments to better explain the purpose of each logic step. | 18|  null
-| [[N&#x2011;96](#96)] | `@inheritdoc` Copies all missing tags from the base function. [Documentation](https://docs.soliditylang.org/en/latest/natspec-format.html#tags) | 89|  null
-| [[N&#x2011;97](#97)] | The `delete` keyword more closely matches the semantics of what is being done, and draws more attention to the changing of state, which may lead to a more thorough audit of its associated logic. | 28|  null
-| [[N&#x2011;98](#98)] | Follow the Solidity naming convention by naming all the contracts in CamelCase. | 1|  null
-| [[N&#x2011;99](#99)] | Named mappings improve the readability of the code, even if they are optional, as it's possible to infer the usage of both key and value, instead of looking just at the type. | 61|  null
-| [[N&#x2011;100](#100)] | Some imports are not used, consider removing them. | 6|  null
-| [[N&#x2011;101](#101)] | Functions should use mixedCase. Examples: `getBalance, transfer, verifyOwner, addMember, changeOwner`. [Documentation] (https://docs.soliditylang.org/en/latest/style-guide.html#function-names) | 3|  null
-| [[N&#x2011;102](#102)] | Use `mixedCase` for local and state variables that are not constants, and add a trailing underscore for non-external variables. [Documentation](https://docs.soliditylang.org/en/latest/style-guide.html#local-and-state-variable-names) | 15|  null
-| [[N&#x2011;103](#103)] | Constants should be named with all capital letters with underscores separating words. Examples: `MAX_BLOCKS`, `TOKEN_NAME`. [Documentation](https://docs.soliditylang.org/en/latest/style-guide.html#constants) | 8|  null
-| [[N&#x2011;104](#104)] | `immutable` variables should be named with all capital letters with underscores separating words. Examples: `TOKEN_ADDRESS`, `ROOT`. [Documentation](https://docs.soliditylang.org/en/latest/style-guide.html#constants) | 75|  null
-| [[N&#x2011;105](#105)] | These files are never imported by any other source file. If any one of these files is needed for tests, it should be moved to a test directory. | 2|  null
-| [[N&#x2011;106](#106)] | This convention is suggested for non-external functions (private or internal). [Documentation](https://docs.soliditylang.org/en/latest/style-guide.html#underscore-prefix-for-non-external-functions-and-variables) | 9|  null
-| [[N&#x2011;107](#107)] | This convention is suggested for non-external state variables (private or internal). [Documentation](https://docs.soliditylang.org/en/latest/style-guide.html#underscore-prefix-for-non-external-functions-and-variables) | 19|  null
-| [[N&#x2011;108](#108)] | Some contracts miss a `@dev/@notice` NatSpec, which should be a [best practice](https://docs.soliditylang.org/en/latest/natspec-format.html) to add as a documentation. | 16|  null
-| [[N&#x2011;109](#109)] | Some contract definitions have an incomplete NatSpec: add a `@author` notation to improve the code documentation. | 69|  null
-| [[N&#x2011;110](#110)] | Some contract definitions have an incomplete NatSpec: add a `@dev` notation to describe the contract to improve the code documentation. | 51|  null
-| [[N&#x2011;111](#111)] | Some contract definitions have an incomplete NatSpec: add a `@notice` notation to describe the contract to improve the code documentation. | 24|  null
-| [[N&#x2011;112](#112)] | Some contract definitions have an incomplete NatSpec: add a `@title` notation to describe the contract to improve the code documentation. | 25|  null
-| [[N&#x2011;113](#113)] | Consider adding some comments on error declarations to explain what they are supposed to do: this will help for future code reviews. | 15|  null
-| [[N&#x2011;114](#114)] | Some errors have an incomplete NatSpec: add a `@dev` notation to describe the error to improve the code documentation. | 26|  null
-| [[N&#x2011;115](#115)] | Some errors have an incomplete NatSpec: add a `@notice` notation to describe the error to improve the code documentation. | 15|  null
-| [[N&#x2011;116](#116)] | Some errors have an incomplete NatSpec: add a `@param` notation to describe the error parameters to improve the code documentation. | 26|  null
-| [[N&#x2011;117](#117)] | Consider adding some comments on event declarations to explain what they are supposed to do: this will help for future code reviews. | 78|  null
-| [[N&#x2011;118](#118)] | Some events have an incomplete NatSpec: add a `@dev` notation to describe the event to improve the code documentation. | 151|  null
-| [[N&#x2011;119](#119)] | Some events have an incomplete NatSpec: add a `@notice` notation to describe the event to improve the code documentation. | 78|  null
-| [[N&#x2011;120](#120)] | Some events have an incomplete NatSpec: add a `@param` notation to describe the event to improve the code documentation. | 152|  null
-| [[N&#x2011;121](#121)] | Consider adding some comments on modifier declarations to explain what they are supposed to do: this will help for future code reviews. | 16|  null
-| [[N&#x2011;122](#122)] | Some modifiers have an incomplete NatSpec: add a `@dev` notation to describe the modifier to improve the code documentation. | 18|  null
-| [[N&#x2011;123](#123)] | Some modifiers have an incomplete NatSpec: add a `@notice` notation to describe the modifier to improve the code documentation. | 17|  null
-| [[N&#x2011;124](#124)] | Some modifiers have an incomplete NatSpec: add a `@param` notation to describe the modifier parameters to improve the code documentation. | 18|  null
+Even code with 100% code coverage can still have bugs due to the order of the operations a user performs, and invariant fuzzers may help significantly. | 1|  0
+| [[N&#x2011;86](#86)] | Some lines use `// x` and some use `//x`. The instances below point out the usages that don't follow the majority, within each file. | 154|  0
+| [[N&#x2011;87](#87)] | If a reentrancy occurs, some events may be emitted in an unexpected order, and this may be a problem if a third party expects a specific order for these events. Ensure that events follow the best practice of CEI. | 115|  0
+| [[N&#x2011;88](#88)] | A duplicated function name in the same contract might have problems with automated auditing tools, so it should be avoided. Consider always using a different name for functions to improve the readability of the code. | 4|  0
+| [[N&#x2011;89](#89)] | If some functions are only allowed to be called by some specific users, consider using a `modifier` instead of checking with a `require` statement, especially if this check is done in multiple functions. | 27|  0
+| [[N&#x2011;90](#90)] | Interfaces should be declared on a separate file and not on the same file where the contract resides in. | 2|  0
+| [[N&#x2011;91](#91)] | Consider adding some parameters to the error to indicate which user or values caused the failure. | 23|  0
+| [[N&#x2011;92](#92)] | Variables which are not constants or immutable should **not** be declared in all uppercase. | 6|  0
+| [[N&#x2011;93](#93)] | This is useful to avoid doing some [typo bugs](https://www.moserware.com/2008/01/constants-on-left-are-better-but-this.html). | 76|  0
+| [[N&#x2011;94](#94)] | Consider adding some comments on critical state variables to explain what they are supposed to do: this will help for future code reviews. | 172|  0
+| [[N&#x2011;95](#95)] | Large and/or complex functions should have more comments to better explain the purpose of each logic step. | 18|  0
+| [[N&#x2011;96](#96)] | `@inheritdoc` Copies all missing tags from the base function. [Documentation](https://docs.soliditylang.org/en/latest/natspec-format.html#tags) | 89|  0
+| [[N&#x2011;97](#97)] | The `delete` keyword more closely matches the semantics of what is being done, and draws more attention to the changing of state, which may lead to a more thorough audit of its associated logic. | 28|  0
+| [[N&#x2011;98](#98)] | Follow the Solidity naming convention by naming all the contracts in CamelCase. | 1|  0
+| [[N&#x2011;99](#99)] | Named mappings improve the readability of the code, even if they are optional, as it's possible to infer the usage of both key and value, instead of looking just at the type. | 61|  0
+| [[N&#x2011;100](#100)] | Some imports are not used, consider removing them. | 6|  0
+| [[N&#x2011;101](#101)] | Functions should use mixedCase. Examples: `getBalance, transfer, verifyOwner, addMember, changeOwner`. [Documentation] (https://docs.soliditylang.org/en/latest/style-guide.html#function-names) | 3|  0
+| [[N&#x2011;102](#102)] | Use `mixedCase` for local and state variables that are not constants, and add a trailing underscore for non-external variables. [Documentation](https://docs.soliditylang.org/en/latest/style-guide.html#local-and-state-variable-names) | 15|  0
+| [[N&#x2011;103](#103)] | Constants should be named with all capital letters with underscores separating words. Examples: `MAX_BLOCKS`, `TOKEN_NAME`. [Documentation](https://docs.soliditylang.org/en/latest/style-guide.html#constants) | 8|  0
+| [[N&#x2011;104](#104)] | `immutable` variables should be named with all capital letters with underscores separating words. Examples: `TOKEN_ADDRESS`, `ROOT`. [Documentation](https://docs.soliditylang.org/en/latest/style-guide.html#constants) | 75|  0
+| [[N&#x2011;105](#105)] | These files are never imported by any other source file. If any one of these files is needed for tests, it should be moved to a test directory. | 2|  0
+| [[N&#x2011;106](#106)] | This convention is suggested for non-external functions (private or internal). [Documentation](https://docs.soliditylang.org/en/latest/style-guide.html#underscore-prefix-for-non-external-functions-and-variables) | 9|  0
+| [[N&#x2011;107](#107)] | This convention is suggested for non-external state variables (private or internal). [Documentation](https://docs.soliditylang.org/en/latest/style-guide.html#underscore-prefix-for-non-external-functions-and-variables) | 19|  0
+| [[N&#x2011;108](#108)] | Some contracts miss a `@dev/@notice` NatSpec, which should be a [best practice](https://docs.soliditylang.org/en/latest/natspec-format.html) to add as a documentation. | 16|  0
+| [[N&#x2011;109](#109)] | Some contract definitions have an incomplete NatSpec: add a `@author` notation to improve the code documentation. | 69|  0
+| [[N&#x2011;110](#110)] | Some contract definitions have an incomplete NatSpec: add a `@dev` notation to describe the contract to improve the code documentation. | 51|  0
+| [[N&#x2011;111](#111)] | Some contract definitions have an incomplete NatSpec: add a `@notice` notation to describe the contract to improve the code documentation. | 24|  0
+| [[N&#x2011;112](#112)] | Some contract definitions have an incomplete NatSpec: add a `@title` notation to describe the contract to improve the code documentation. | 25|  0
+| [[N&#x2011;113](#113)] | Consider adding some comments on error declarations to explain what they are supposed to do: this will help for future code reviews. | 15|  0
+| [[N&#x2011;114](#114)] | Some errors have an incomplete NatSpec: add a `@dev` notation to describe the error to improve the code documentation. | 26|  0
+| [[N&#x2011;115](#115)] | Some errors have an incomplete NatSpec: add a `@notice` notation to describe the error to improve the code documentation. | 15|  0
+| [[N&#x2011;116](#116)] | Some errors have an incomplete NatSpec: add a `@param` notation to describe the error parameters to improve the code documentation. | 26|  0
+| [[N&#x2011;117](#117)] | Consider adding some comments on event declarations to explain what they are supposed to do: this will help for future code reviews. | 78|  0
+| [[N&#x2011;118](#118)] | Some events have an incomplete NatSpec: add a `@dev` notation to describe the event to improve the code documentation. | 151|  0
+| [[N&#x2011;119](#119)] | Some events have an incomplete NatSpec: add a `@notice` notation to describe the event to improve the code documentation. | 78|  0
+| [[N&#x2011;120](#120)] | Some events have an incomplete NatSpec: add a `@param` notation to describe the event to improve the code documentation. | 152|  0
+| [[N&#x2011;121](#121)] | Consider adding some comments on modifier declarations to explain what they are supposed to do: this will help for future code reviews. | 16|  0
+| [[N&#x2011;122](#122)] | Some modifiers have an incomplete NatSpec: add a `@dev` notation to describe the modifier to improve the code documentation. | 18|  0
+| [[N&#x2011;123](#123)] | Some modifiers have an incomplete NatSpec: add a `@notice` notation to describe the modifier to improve the code documentation. | 17|  0
+| [[N&#x2011;124](#124)] | Some modifiers have an incomplete NatSpec: add a `@param` notation to describe the modifier parameters to improve the code documentation. | 18|  0
 | [[N&#x2011;125](#125)] | Some functions miss a NatSpec, which should be a [best practice](https://docs.soliditylang.org/en/latest/natspec-format.html) to add as a documentation.
 
-Even if Natspec for internal and private function is not parsed (but this may change in the future, according to the official docs), it still helps while reviewing the codebase. | 240|  null
-| [[N&#x2011;126](#126)] | Some functions have an incomplete NatSpec: add a `@dev` notation to describe the function to improve the code documentation. | 518|  null
-| [[N&#x2011;127](#127)] | If a function returns [too many variables](https://docs.soliditylang.org/en/latest/contracts.html#returning-multiple-values), replacing them with a struct can improve code readability, maintainability and reusability. | 1|  null
-| [[N&#x2011;128](#128)] | As an example, rather than using `event Paused()` and `event Unpaused()`, it would be preferable to use event `PauseState(address indexed operator, bool isPaused)`. | 2|  null
+Even if Natspec for internal and private function is not parsed (but this may change in the future, according to the official docs), it still helps while reviewing the codebase. | 240|  0
+| [[N&#x2011;126](#126)] | Some functions have an incomplete NatSpec: add a `@dev` notation to describe the function to improve the code documentation. | 518|  0
+| [[N&#x2011;127](#127)] | If a function returns [too many variables](https://docs.soliditylang.org/en/latest/contracts.html#returning-multiple-values), replacing them with a struct can improve code readability, maintainability and reusability. | 1|  0
+| [[N&#x2011;128](#128)] | As an example, rather than using `event Paused()` and `event Unpaused()`, it would be preferable to use event `PauseState(address indexed operator, bool isPaused)`. | 2|  0
 | [[N&#x2011;129](#129)] | Formal verification is the act of proving or disproving the correctness of intended algorithms underlying a system with respect to a certain formal specification/property/invariant, using formal methods of mathematics.
 
-Some tools that are currently available to perform these tests on smart contracts are [SMTChecker](https://docs.soliditylang.org/en/latest/smtchecker.html) and [Certora Prover](https://www.certora.com/). | 1|  null
-| [[N&#x2011;130](#130)] | Low-level languages like assembly should require extensive documentation and comments to clarify the purpose of each instruction. | 1|  null
-| [[N&#x2011;131](#131)] | The `if`/`else` statement can be written in a shorthand way using the ternary operator, as it increases readability and reduces the number of lines of code. | 3|  null
+Some tools that are currently available to perform these tests on smart contracts are [SMTChecker](https://docs.soliditylang.org/en/latest/smtchecker.html) and [Certora Prover](https://www.certora.com/). | 1|  0
+| [[N&#x2011;130](#130)] | Low-level languages like assembly should require extensive documentation and comments to clarify the purpose of each instruction. | 1|  0
+| [[N&#x2011;131](#131)] | The `if`/`else` statement can be written in a shorthand way using the ternary operator, as it increases readability and reduces the number of lines of code. | 3|  0
 | |Issue|Instances| Gas Savings
 |-|:-|:-:|
-| [[D&#x2011;01](#01)] | The rule is valid for some ERC20, but these instances contain either non-ERC20 or ERC20 that do not have this issue. | 24|  null
-| [[D&#x2011;02](#02)] | The rule is valid for some ERC20, but these instances contain either non-ERC20 or ERC20 that do not have this issue. | 29|  null
-| [[D&#x2011;03](#03)] | The rule is valid for some ERC20, but these instances contain either non-ERC20 or ERC20 that do not have this issue. | 59|  null
-| [[D&#x2011;04](#04)] | The general rule is true, but this project is not deployed on multiple chains. | 2|  null
-| [[D&#x2011;05](#05)] | The following instances are not addresses and thus they are invalid. | 22|  null
-| [[D&#x2011;06](#06)] | The following instances are not numbers and thus they are invalid. | 704|  null
-| [[D&#x2011;07](#07)] | The following instances do not indicate time, or they already use time units, and thus they are invalid. | 72|  null
-| [[D&#x2011;08](#08)] | The general rule is true, but the following instances are invalid. | 61|  null
-| [[D&#x2011;09](#09)] | The general rule is true, but the following instances are invalid. | 61|  null
+| [[D&#x2011;01](#01)] | The rule is valid for some ERC20, but these instances contain either non-ERC20 or ERC20 that do not have this issue. | 24|  0
+| [[D&#x2011;02](#02)] | The rule is valid for some ERC20, but these instances contain either non-ERC20 or ERC20 that do not have this issue. | 29|  0
+| [[D&#x2011;03](#03)] | The rule is valid for some ERC20, but these instances contain either non-ERC20 or ERC20 that do not have this issue. | 59|  0
+| [[D&#x2011;04](#04)] | The general rule is true, but this project is not deployed on multiple chains. | 2|  0
+| [[D&#x2011;05](#05)] | The following instances are not addresses and thus they are invalid. | 22|  0
+| [[D&#x2011;06](#06)] | The following instances are not numbers and thus they are invalid. | 704|  0
+| [[D&#x2011;07](#07)] | The following instances do not indicate time, or they already use time units, and thus they are invalid. | 72|  0
+| [[D&#x2011;08](#08)] | The general rule is true, but the following instances are invalid. | 61|  0
+| [[D&#x2011;09](#09)] | The general rule is true, but the following instances are invalid. | 61|  0
 | [[D&#x2011;10](#10)] | This issue is not valid, it's actually worse in gas usage. [Proof](https://gist.github.com/DadeKuma/dbe25aafceb14291294449e31b0973c5) | 14|  1358
-| [[D&#x2011;11](#11)] | The general rule is true, but the following instances are invalid. | 4|  null
-| [[D&#x2011;12](#12)] | The general rule is true, but the following instances are invalid. | 13|  null
+| [[D&#x2011;11](#11)] | The general rule is true, but the following instances are invalid. | 4|  0
+| [[D&#x2011;12](#12)] | The general rule is true, but the following instances are invalid. | 13|  0
 | [[D&#x2011;13](#13)] | The general rule is true, but every in-scope function follows the recommended order:
 
 1. Visibility
 2. Mutability
 3. Virtual
 4. Override
-5. Custom modifiers | 1|  null
+5. Custom modifiers | 1|  0
  # # # # # # # # # # # # # # # # # # # # # #
 #                                         #
 #             |\_/|                       #
